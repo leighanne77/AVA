@@ -10,6 +10,25 @@ the owner can **revoke at any time**.
 
 ---
 
+## 🛠 Stack
+
+> **By design, an answers-only system**: there is no endpoint that returns
+> records, files, or identifiers — consumers receive verified answers and
+> cryptographic receipts to integrate into their own systems, never the data.
+
+| Layer | Technology |
+|---|---|
+| **Query gate** | FastAPI + uvicorn · closed query set (`count` · `exists` · `sum` · `mean` · trusted-only `attest`) · Mode C `/preview` under time-boxed, per-consumer grants · every response carries an audit receipt |
+| **Vault & crypto** | AES-256-GCM per record and per media object (fresh nonces, AAD-bound) · envelope encryption — data keys wrapped by the KEK · closed five-class media taxonomy (video, audio, tabular, unstructured, gis) with per-class disclosure rules |
+| **Key release** | **The swappable seam** (`make_key_release`): `LocalMockKMS` for dev · `CloudKMSKeyRelease` (google-cloud-kms, lazy + injectable client) for production — a KMS refusal is the owner's infrastructure-layer kill switch · interface shaped for an open-source KBS swap |
+| **Attestation target** | Google Cloud **Confidential Space** (AMD SEV-SNP / Intel TDX) · KEK release policy bound to a cosign-signed container digest · ordered bring-up in `scripts/gcp/00–06` |
+| **Audit** | Hash-chained, Ed25519-signed append-only log · verifiable offline by anyone holding the public key — no vault access, no secrets |
+| **Provenance** | Merkle commitments over matched sets (`attest`) · offline single-object membership proofs |
+| **Leak tracing** | Visible per-consumer watermark + keyed **blind invisible tracemark** (HMAC-seeded, winsorized-correlation detector) · owner-side `detect_watermark.py` names the consumer and grant · self-attacking removal drill |
+| **Consumer kit** | `kit/ava_verify.py` — stdlib-only (bare python3, no packages): reachability → audit-key fingerprint cross-check → first query, before trusting anything |
+| **Storage** | Local-first vault · `vault_sync.py` to Cloud Storage — the sync walks only the vault directory, so registries, grants, audit log, and keys **cannot** travel |
+| **Testing** | pytest — 102 tests including named invariants (answers-only leak tripwire, no-plaintext-on-disk with base64-impossible markers, sync scope, watermark survival) and drills (timed revocation, watermark attack battery, 12-stage synthetic dry run) |
+
 ## 🗺 System at a Glance
 
 ```mermaid
@@ -44,25 +63,6 @@ flowchart TD
 <p align="center">
   <img src="examples/AVA_one_pager.png" alt="AVA one-pager — shared data is a copy you can't take back; AVA: share the value, keep the only copy" width="720">
 </p>
-
-## 🛠 Stack
-
-> **By design, an answers-only system**: there is no endpoint that returns
-> records, files, or identifiers — consumers receive verified answers and
-> cryptographic receipts to integrate into their own systems, never the data.
-
-| Layer | Technology |
-|---|---|
-| **Query gate** | FastAPI + uvicorn · closed query set (`count` · `exists` · `sum` · `mean` · trusted-only `attest`) · Mode C `/preview` under time-boxed, per-consumer grants · every response carries an audit receipt |
-| **Vault & crypto** | AES-256-GCM per record and per media object (fresh nonces, AAD-bound) · envelope encryption — data keys wrapped by the KEK · closed five-class media taxonomy (video, audio, tabular, unstructured, gis) with per-class disclosure rules |
-| **Key release** | **The swappable seam** (`make_key_release`): `LocalMockKMS` for dev · `CloudKMSKeyRelease` (google-cloud-kms, lazy + injectable client) for production — a KMS refusal is the owner's infrastructure-layer kill switch · interface shaped for an open-source KBS swap |
-| **Attestation target** | Google Cloud **Confidential Space** (AMD SEV-SNP / Intel TDX) · KEK release policy bound to a cosign-signed container digest · ordered bring-up in `scripts/gcp/00–06` |
-| **Audit** | Hash-chained, Ed25519-signed append-only log · verifiable offline by anyone holding the public key — no vault access, no secrets |
-| **Provenance** | Merkle commitments over matched sets (`attest`) · offline single-object membership proofs |
-| **Leak tracing** | Visible per-consumer watermark + keyed **blind invisible tracemark** (HMAC-seeded, winsorized-correlation detector) · owner-side `detect_watermark.py` names the consumer and grant · self-attacking removal drill |
-| **Consumer kit** | `kit/ava_verify.py` — stdlib-only (bare python3, no packages): reachability → audit-key fingerprint cross-check → first query, before trusting anything |
-| **Storage** | Local-first vault · `vault_sync.py` to Cloud Storage — the sync walks only the vault directory, so registries, grants, audit log, and keys **cannot** travel |
-| **Testing** | pytest — 102 tests including named invariants (answers-only leak tripwire, no-plaintext-on-disk with base64-impossible markers, sync scope, watermark survival) and drills (timed revocation, watermark attack battery, 12-stage synthetic dry run) |
 
 ---
 
