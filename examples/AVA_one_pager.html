@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVA — Share the value. Keep the only copy.</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap');
+
+  :root{
+    --red:#C8202F;
+    --gold:#E8A82A;
+    --blue:#4A6B8A;
+    --navy:#1A2332;
+    --cream:#F5EEE0;
+    --ink:#1A2332;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#3a3f47;}
+  body{
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    display:flex;justify-content:center;
+    padding:28px 16px;
+  }
+  .oswald{font-family:'Oswald','Impact','Arial Black',sans-serif;}
+
+  .poster{
+    width:840px;
+    background:#ffffff;
+    box-shadow:0 24px 70px rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+
+  /* ---------- HEADER ---------- */
+  .header{
+    background:var(--navy);
+    position:relative;
+    padding:0 0 40px;
+    text-align:center;
+  }
+  .edgebar{height:14px;background:var(--red);}
+  .edgebar.thin{height:6px;background:var(--gold);}
+  .wordmark{
+    padding:58px 0 0;
+    font-family:'Oswald',sans-serif;font-weight:700;
+    font-size:96px;line-height:1;color:var(--cream);
+    letter-spacing:.14em;text-indent:.14em;
+  }
+  .goldrule{
+    width:150px;height:3px;background:var(--gold);
+    margin:24px auto 20px;
+  }
+  .kicker{
+    color:var(--cream);
+    font-family:'Oswald',sans-serif;font-weight:500;
+    letter-spacing:.16em;font-size:15px;text-transform:uppercase;
+  }
+  .stars{letter-spacing:.35em;font-size:15px;color:var(--blue);margin-top:14px;}
+
+  /* ---------- SECTIONS ---------- */
+  .section{padding:44px 54px 8px;}
+  .eyebrow{
+    font-family:'Oswald',sans-serif;font-weight:600;
+    letter-spacing:.2em;font-size:14px;color:var(--blue);
+    text-transform:uppercase;margin-bottom:10px;
+  }
+  h1{
+    font-family:'Oswald',sans-serif;font-weight:700;
+    font-size:40px;line-height:1.06;color:var(--red);
+    text-transform:uppercase;letter-spacing:.005em;
+  }
+  h1 .navy{color:var(--navy);}
+  .lead{
+    font-size:16px;line-height:1.6;color:var(--navy);
+    margin-top:16px;max-width:660px;
+  }
+  .lead strong{font-weight:700;}
+
+  /* problem tiles */
+  .tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:28px;}
+  .tile{
+    background:var(--cream);
+    border-left:5px solid var(--blue);
+    border-top:1.5px solid var(--blue);
+    border-bottom:1.5px solid var(--blue);
+    border-right:1px solid var(--gold);
+    padding:20px 18px;
+  }
+  .tile .ico{width:40px;height:40px;margin-bottom:14px;}
+  .tile h3{
+    font-family:'Oswald',sans-serif;font-weight:600;
+    font-size:16px;color:var(--navy);text-transform:uppercase;
+    letter-spacing:.03em;line-height:1.15;margin-bottom:8px;
+  }
+  .tile p{font-size:13.5px;line-height:1.5;color:#33404f;}
+
+  /* divider band */
+  .band{
+    margin-top:44px;background:var(--navy);
+    padding:22px 54px;text-align:center;
+    display:flex;align-items:center;justify-content:center;gap:18px;
+  }
+  .band .txt{
+    font-family:'Oswald',sans-serif;font-weight:600;
+    letter-spacing:.22em;font-size:16px;color:var(--gold);
+    text-transform:uppercase;
+  }
+  .band .arrow{color:var(--cream);font-size:20px;}
+
+  /* answer / benefits */
+  .answer{padding:44px 54px 10px;}
+  .answer h1{color:var(--navy);}
+  .answer h1 .red{color:var(--red);}
+  .benefits{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .ben{
+    background:var(--navy);color:var(--cream);
+    padding:22px 22px 24px;position:relative;
+    display:flex;gap:16px;align-items:flex-start;
+  }
+  .ben .ico{width:40px;height:40px;flex:0 0 40px;margin-top:2px;}
+  .ben h3{
+    font-family:'Oswald',sans-serif;font-weight:600;
+    font-size:17px;letter-spacing:.02em;text-transform:uppercase;
+    margin-bottom:7px;color:#fff;
+  }
+  .ben p{font-size:13.5px;line-height:1.5;color:#c9d2de;}
+
+  /* before / after */
+  .contrast{margin:34px 54px 8px;display:grid;grid-template-columns:1fr 1fr;
+    border:1.5px solid #d9d2c4;}
+  .col{padding:24px 26px;}
+  .col.before{background:#fbf9f4;border-right:1.5px solid #d9d2c4;}
+  .col .lab{
+    font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;
+    letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px;
+  }
+  .col.before .lab{color:var(--red);}
+  .col.after .lab{color:var(--blue);}
+  .flow{display:flex;align-items:center;gap:10px;font-family:'Oswald',sans-serif;
+    font-weight:600;font-size:16px;color:var(--navy);text-transform:uppercase;letter-spacing:.02em;}
+  .flow .sep{color:var(--gold);font-size:15px;}
+  .col p{font-size:13px;line-height:1.5;color:#4a5563;margin-top:12px;}
+
+  /* footer */
+  .footer{
+    margin-top:40px;background:var(--navy);
+    padding:34px 54px 30px;text-align:center;color:var(--cream);
+  }
+  .footer .fstars{letter-spacing:.4em;font-size:16px;color:var(--gold);}
+  .footer .tag{
+    font-family:'Oswald',sans-serif;font-weight:600;
+    font-size:20px;letter-spacing:.04em;text-transform:uppercase;
+    margin-top:14px;color:#fff;
+  }
+  .footer .sub{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:#9aa6b5;margin-top:10px;}
+  .footer .footrule{width:120px;height:2px;background:var(--gold);margin:18px auto 0;}
+</style>
+</head>
+<body>
+  <div class="poster">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="edgebar"></div>
+      <div class="edgebar thin"></div>
+      <div class="wordmark">AVA</div>
+      <div class="goldrule"></div>
+      <div class="kicker">Confidential compute for high-value data sharing</div>
+      <div class="stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+    </header>
+
+    <!-- PROBLEM -->
+    <section class="section">
+      <div class="eyebrow">The Problem</div>
+      <h1>Shared data is a copy<br><span class="navy">you can't take back.</span></h1>
+      <p class="lead">The moment you hand over a dataset, a model, or a deal file, you lose control of it.
+      It can be saved, forwarded, and re-shared — to people you never approved, for as long as they choose to keep it.
+      <strong>A copy is forever, and it is no longer yours.</strong></p>
+
+      <div class="tiles">
+        <div class="tile">
+          <svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Copies"><title>Copies</title>
+            <g transform="translate(15 -1) scale(0.72)"><path fill="#4A6B8A" fill-rule="evenodd" d="M 12 4 L 44 4 L 56 16 L 56 60 L 12 60 Z"/></g>
+            <g transform="translate(-6 5) scale(0.72)" fill-rule="evenodd">
+              <path fill="#1A2332" d="M 12 4 L 44 4 L 56 16 L 56 60 L 12 60 Z"/>
+              <polygon fill="#F5EEE0" points="44,4 44,16 56,16"/>
+              <rect fill="#F5EEE0" x="18" y="27" width="30" height="4"/>
+              <rect fill="#F5EEE0" x="18" y="37" width="30" height="4"/>
+              <rect fill="#F5EEE0" x="18" y="47" width="22" height="4"/>
+            </g>
+          </svg>
+          <h3>One copy<br>becomes many</h3>
+          <p>Every recipient can duplicate your file instantly — and you'll never know how many exist.</p>
+        </div>
+        <div class="tile">
+          <svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Forwarded"><title>Forwarded</title>
+            <g transform="rotate(40 32 32)">
+              <ellipse cx="32" cy="23" rx="10.5" ry="15" fill="#1A2332"/>
+              <ellipse cx="32" cy="23" rx="5.5" ry="10" fill="#F5EEE0"/>
+              <ellipse cx="32" cy="41" rx="10.5" ry="15" fill="#1A2332"/>
+              <ellipse cx="32" cy="41" rx="5.5" ry="10" fill="#F5EEE0"/>
+            </g>
+          </svg>
+          <h3>Forwarded<br>past your reach</h3>
+          <p>Once it leaves your hands it travels on its own — through inboxes and drives you can't see.</p>
+        </div>
+        <div class="tile">
+          <svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Cannot revoke"><title>Cannot revoke</title>
+            <path fill="#1A2332" fill-rule="evenodd" d="M 32 6 A 26 26 0 1 1 32 58 A 26 26 0 1 1 32 6 Z M 32 15 A 17 17 0 1 0 32 49 A 17 17 0 1 0 32 15 Z"/>
+            <rect x="28" y="9" width="8" height="46" rx="4" fill="#C8202F" transform="rotate(45 32 32)"/>
+          </svg>
+          <h3>No way<br>to revoke</h3>
+          <p>You can't un-send what you've already given. Access, once granted, is permanent.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHIFT BAND -->
+    <div class="band">
+      <span class="txt">There is another way</span>
+      <span class="arrow">&#9660;</span>
+    </div>
+
+    <!-- ANSWER -->
+    <section class="answer">
+      <div class="eyebrow">AVA</div>
+      <h1>Share the <span class="red">value.</span><br>Keep the only copy.</h1>
+      <p class="lead"><strong>AVA</strong> lets you give a counterparty access to your data
+      without ever handing over a copy that can be forwarded. You stay the owner. They get access —
+      not the file. And you can withdraw it at any time.</p>
+
+      <div class="benefits">
+        <div class="ben">
+          <svg class="ico" viewBox="0 0 64 64" role="img" aria-label="The only copy"><title>The only copy</title>
+            <g fill-rule="evenodd">
+              <path fill="#F5EEE0" d="M 12 4 L 44 4 L 56 16 L 56 60 L 12 60 Z"/>
+              <polygon fill="#1A2332" points="44,4 44,16 56,16"/>
+              <rect fill="#1A2332" x="18" y="27" width="30" height="4"/>
+              <rect fill="#1A2332" x="18" y="37" width="30" height="4"/>
+              <rect fill="#1A2332" x="18" y="47" width="22" height="4"/>
+            </g>
+          </svg>
+          <div>
+            <h3>You keep the only copy</h3>
+            <p>The data never leaves your control. Recipients work with it in place — they never hold it.</p>
+          </div>
+        </div>
+        <div class="ben">
+          <svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Revocable key"><title>Revocable key</title>
+            <g transform="rotate(45 32 32)">
+              <path fill="#F5EEE0" fill-rule="evenodd" d="M 32 6 A 13 13 0 1 1 32 32 A 13 13 0 1 1 32 6 Z M 32 13 A 6 6 0 1 0 32 25 A 6 6 0 1 0 32 13 Z"/>
+              <rect fill="#F5EEE0" x="28.5" y="30" width="7" height="28" rx="1.5"/>
+              <rect fill="#F5EEE0" x="35.5" y="44" width="9" height="6.5" rx="1.5"/>
+              <rect fill="#F5EEE0" x="35.5" y="53" width="6.5" height="5.5" rx="1.5"/>
+            </g>
+          </svg>
+          <div>
+            <h3>Access by revocable key</h3>
+            <p>Grant access with a key — and cut it off the moment the relationship or the deal changes.</p>
+          </div>
+        </div>
+        <div class="ben">
+          <svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Attested"><title>Attested</title>
+            <path fill="#F5EEE0" fill-rule="evenodd" d="M 32 4 L 56 12 L 54 36 Q 52 52 32 60 Q 12 52 10 36 L 8 12 Z"/>
+            <path d="M 23 32 L 29.5 39 L 43 24" fill="none" stroke="#1A2332" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <h3>Attested, not trusted</h3>
+            <p>Access runs inside verified, sealed compute. Control is proven cryptographically — not promised.</p>
+          </div>
+        </div>
+        <div class="ben">
+          <svg class="ico" viewBox="0 0 64 64" role="img" aria-label="Nothing to forward"><title>Nothing to forward</title>
+            <g transform="rotate(40 32 32)">
+              <ellipse cx="32" cy="23" rx="10.5" ry="15" fill="#F5EEE0"/>
+              <ellipse cx="32" cy="23" rx="5.5" ry="10" fill="#1A2332"/>
+              <ellipse cx="32" cy="41" rx="10.5" ry="15" fill="#F5EEE0"/>
+              <ellipse cx="32" cy="41" rx="5.5" ry="10" fill="#1A2332"/>
+            </g>
+            <line x1="14" y1="14" x2="50" y2="50" stroke="#D43545" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <h3>Nothing to forward</h3>
+            <p>There is no loose file to leak, copy, or re-share. Remove the copy, and you remove the risk.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEFORE / AFTER -->
+    <div class="contrast">
+      <div class="col before">
+        <div class="lab">Without AVA</div>
+        <div class="flow">Hand over a copy <span class="sep">&#8594;</span> lose control</div>
+        <p>The file is gone the instant you send it. What happens next is out of your hands.</p>
+      </div>
+      <div class="col after">
+        <div class="lab">With AVA</div>
+        <div class="flow">Grant access <span class="sep">&#8594;</span> keep control</div>
+        <p>You share the value of the data and hold the only copy — revocable, attested, yours.</p>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="fstars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+      <div class="tag">Share the value. Keep the only copy.</div>
+      <div class="sub">Answers&nbsp;&#183;&nbsp;Not&nbsp;&#183;&nbsp;Copies</div>
+      <div class="footrule"></div>
+    </footer>
+
+  </div>
+</body>
+</html>

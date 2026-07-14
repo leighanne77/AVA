@@ -1,0 +1,14 @@
+# local runtime state — never in version control
+.venv/
+data/
+keys/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+
+# secrets, always
+.env*
+*-credentials.*
+*.pem
+*.key

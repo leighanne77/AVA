@@ -1,0 +1,16 @@
+# mirror of .gitignore runtime/secret entries, plus repo-only files
+.venv/
+data/
+keys/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+.env*
+*-credentials.*
+*.pem
+*.key
+.git/
+tests/
+scripts/
+*.md
