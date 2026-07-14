@@ -107,11 +107,42 @@ The v1 workload: the query gate that runs inside a Google Cloud
 provisioning scripts. It runs fully **local-first** (mock key release),
 so the whole flow is testable before any cloud project exists.
 
-## Quickstart (local dev)
+## Requirements
+
+**Local mode (the whole quickstart below) needs only Python 3.9+** — no
+cloud account, no credentials, no Docker, nothing leaves your machine. Key
+release is mocked (`AVA_MODE=local`, the default). This is enough to
+explore the entire flow: ingest, query, previews, grants, watermarking,
+audit, and the drills. (3.12 is what the container uses; `pip install`
+pulls ~200 MB, including the Google Cloud client libraries, which are
+imported only in enclave mode.)
+
+**Enclave / production mode is a separate lift** — the quickstart will
+*not* give you a hardware-attested deployment. To get real attested key
+release (`AVA_MODE=enclave`) you need:
+
+- A **dedicated Google Cloud project** (the scripts refuse to run without
+  an explicit `AVA_PROJECT_ID`), with billing enabled.
+- These APIs enabled: **Confidential Computing, Cloud KMS, Cloud Storage,
+  Artifact Registry, IAM/STS** (`scripts/gcp/01_apis.sh` does this).
+- A region/zone offering **Confidential Space** on **AMD SEV-SNP or Intel
+  TDX** — Confidential VMs aren't available everywhere; check before you
+  pick a region.
+- **`gcloud` installed and authenticated**, plus Application Default
+  Credentials for owner-side KMS calls
+  (`gcloud auth application-default login`).
+- **cosign** to sign the container image, whose digest the KMS release
+  policy is pinned to.
+
+Without those, `AVA_MODE=enclave` fails at the first KMS call **by
+design** — the vault cannot be decrypted outside an authorized identity.
+See `scripts/gcp/README.md` for the ordered bring-up.
+
+## Quickstart (local dev — Python 3.9+, nothing else)
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest tests/ -q
+.venv/bin/python -m pytest tests/ -q               # 102 tests
 
 .venv/bin/python scripts/generate_synthetic.py --n 500   # encrypted vault
 .venv/bin/python scripts/issue_consumer_key.py --id consumer-001 --label "Pilot"
@@ -126,9 +157,12 @@ curl -s localhost:8080/query \
   -d '{"type":"count","category":"alpha","ts_from":"2026-01-01"}'
 ```
 
-Multimodal media (five classes: video, audio, tabular, unstructured, gis):
+Multimodal media (five classes: video, audio, tabular, unstructured, gis).
+Point `--path` at your own media directory; to try it immediately, generate
+a synthetic batch first:
 
 ```bash
+.venv/bin/python scripts/generate_synthetic_media.py --dir batch    # 6 files, all 5 classes
 .venv/bin/python scripts/ingest_media.py --path batch/ --zone zone-03 --category alpha
 curl -s localhost:8080/query -H "Authorization: Bearer <key>" -H "Content-Type: application/json" \
   -d '{"target":"media","type":"count","media_type":"gis"}'   # answers over the index
